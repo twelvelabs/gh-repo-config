@@ -8,6 +8,7 @@ SHELL := /bin/bash
 fixtures: ## Recreate test fixtures
 	rm -Rf ./tests/fixtures
 	./gh-repo-config init --config ./tests/fixtures
+	cp ./tests/fixtures/branch-protection/main.json ./tests/fixtures/branch-protection/prod.json
 
 .PHONY: format
 format: ## Format source code
