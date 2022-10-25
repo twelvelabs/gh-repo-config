@@ -1,0 +1,25 @@
+{
+    "allow_auto_merge": false,
+    "allow_merge_commit": false,
+    "allow_rebase_merge": false,
+    "allow_squash_merge": true,
+    "allow_update_branch": true,
+    "default_branch": "main",
+    "delete_branch_on_merge": true,
+    "description": "",
+    "has_issues": true,
+    "has_projects": true,
+    "has_wiki": true,
+    "homepage": "",
+    "security_and_analysis": {
+        "advanced_security": {
+            "status": "enabled"
+        },
+        "secret_scanning": {
+            "status": "enabled"
+        }
+    },
+    "squash_merge_commit_message": "BLANK",
+    "squash_merge_commit_title": "PR_TITLE",
+    "web_commit_signoff_required": false
+}
