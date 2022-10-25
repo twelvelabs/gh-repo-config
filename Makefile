@@ -31,11 +31,20 @@ run: ## Run the extension
 install: ## Install the extension
 	gh extension install .
 
+.PHONY: release
+release: ## Create a new GitHub release
+	git fetch --all --tags
+	@if ! command -v svu >/dev/null 2>&1; then echo "Unable to find svu!"; exit 1; fi
+	@if [[ "$$(svu next)" == "$$(svu current)" ]]; then echo "Nothing to release!" && exit 1; fi
+	gh release create "$$(svu next)" --generate-notes
+
 
 ##@ Other
 
 .PHONY: setup
 setup: ## Bootstrap for local development
+	@if ! command -v gh >/dev/null 2>&1; then echo "Unable to find gh!"; exit 1; fi
+	@if ! command -v git >/dev/null 2>&1; then echo "Unable to find git!"; exit 1; fi
 	git submodule update --init --recursive
 
 # Via https://www.thapaliya.com/en/writings/well-documented-makefiles/
