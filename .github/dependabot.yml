@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: fix
+      prefix: ci
       include: scope
 
   - package-ecosystem: gitsubmodule
@@ -18,6 +18,6 @@ updates:
     schedule:
       interval: weekly
     commit-message:
-      prefix: fix
+      prefix: ci
       include: scope
 
