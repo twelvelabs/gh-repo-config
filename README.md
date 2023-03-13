@@ -41,7 +41,7 @@ The JSON files are API payloads for the following endpoints:
 Edit the default values to your liking. To apply the settings, run:
 
 ```sh
-gh repo-config
+gh repo-config apply
 ```
 
 **Note: Your auth token will need to have appropriate access to the repo you are trying to configure.** Before filing bugs, please check the following:
