@@ -15,6 +15,50 @@ else
     _GH="gh"
 fi
 
+JSON_REPO_Q=$(
+    cat <<'EOL'
+{
+    "name": .name,
+    "full_name": .full_name,
+    "private": .private,
+    "description": .description,
+    "has_issues": .has_issues,
+    "has_projects": .has_projects,
+    "has_wiki": .has_wiki,
+    "homepage": .homepage,
+    "ssh_url": .ssh_url,
+    "default_branch": .default_branch,
+    "allow_merge_commit": .allow_merge_commit,
+    "allow_squash_merge": .allow_squash_merge,
+    "allow_rebase_merge": .allow_rebase_merge,
+    "allow_auto_merge": .allow_auto_merge,
+    "delete_branch_on_merge": .delete_branch_on_merge,
+    "allow_update_branch": .allow_update_branch,
+    "use_squash_pr_title_as_default": .use_squash_pr_title_as_default,
+    "web_commit_signoff_required": .web_commit_signoff_required
+}
+EOL
+)
+
+JSON_BRANCH_PROTECTION_Q=$(
+    cat <<'EOL'
+{
+    "required_pull_request_reviews": .required_pull_request_reviews,
+    "allow_fork_syncing": .allow_fork_syncing,
+    "required_status_checks": .required_status_checks,
+    "required_signatures": .required_signatures,
+    "required_linear_history": .required_linear_history,
+    "required_conversation_resolution": .required_conversation_resolution,
+    "allow_force_pushes": .allow_force_pushes,
+    "allow_deletions": .allow_deletions,
+    "block_creations": .block_creations,
+    "enforce_admins": .enforce_admins,
+    "restrictions": .restrictions,
+    "lock_branch": .lock_branch
+}
+EOL
+)
+
 log() {
     local -r msg="$1"
     printf "%s\n" "${msg}" >/dev/stderr
@@ -103,10 +147,10 @@ app::init() {
     local -r branch="$(git rev-parse --abbrev-ref HEAD)"
     log "Initializing config..."
     app::init_dir "${APP_CONFIG}"
-    app::init_file_source "${APP_CONFIG}/repo.json" "/repos/:owner/:repo"
+    app::init_file_source "${APP_CONFIG}/repo.json" "/repos/:owner/:repo" "$JSON_REPO_Q"
     app::init_file_source "${APP_CONFIG}/topics.json" "/repos/:owner/:repo/topics"
     app::init_dir "${APP_CONFIG}/branch-protection"
-    app::init_file_source "${APP_CONFIG}/branch-protection/${branch}.json" "/repos/:owner/:repo/branches/${branch}/protection"
+    app::init_file_source "${APP_CONFIG}/branch-protection/${branch}.json" "/repos/:owner/:repo/branches/${branch}/protection" "$JSON_BRANCH_PROTECTION_Q"
     log "Done"
 }
 
@@ -122,7 +166,7 @@ app::init_dir() {
 
 app::init_file_source() {
     local -r path="$1"
-    local -r content="$(gh api $2 | python3 -m json.tool | grep --invert-match url)"  # Ommiting url lines for simplicity.
+    local -r content="$(gh api $2 | jq "$3")"  # Ommiting url lines for simplicity.
     if [ -f "${path}" ]; then
         log:action "warn" "${path} already exists!"
         if app::confirm "Overwrite?"; then
