@@ -148,7 +148,7 @@ app::init() {
     log "Initializing config..."
     app::init_dir "${APP_CONFIG}"
     app::init_file_source "${APP_CONFIG}/repo.json" "/repos/:owner/:repo" "$JSON_REPO_Q"
-    app::init_file_source "${APP_CONFIG}/topics.json" "/repos/:owner/:repo/topics"
+    app::init_file_source "${APP_CONFIG}/topics.json" "/repos/:owner/:repo/topics" "."
     app::init_dir "${APP_CONFIG}/branch-protection"
     app::init_file_source "${APP_CONFIG}/branch-protection/${branch}.json" "/repos/:owner/:repo/branches/${branch}/protection" "$JSON_BRANCH_PROTECTION_Q"
     log "Done"
