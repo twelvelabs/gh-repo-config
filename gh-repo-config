@@ -163,12 +163,13 @@ app::help() {
 }
 
 app::init() {
+    local -r branch="$(git rev-parse --abbrev-ref HEAD)"
     log "Initializing config..."
     app::init_dir "${APP_CONFIG}"
-    app::init_file "${APP_CONFIG}/repo.json" "${JSON_REPO}"
-    app::init_file "${APP_CONFIG}/topics.json" "${JSON_TOPICS}"
+    app::init_file_source "${APP_CONFIG}/repo.json" "/repos/:owner/:repo"
+    app::init_file_source "${APP_CONFIG}/topics.json" "/repos/:owner/:repo/topics"
     app::init_dir "${APP_CONFIG}/branch-protection"
-    app::init_file "${APP_CONFIG}/branch-protection/main.json" "${JSON_BRANCH_PROTECTION}"
+    app::init_file_source "${APP_CONFIG}/branch-protection/${branch}.json" "/repos/:owner/:repo/branches/${branch}/protection"
     log "Done"
 }
 
@@ -182,9 +183,9 @@ app::init_dir() {
     fi
 }
 
-app::init_file() {
+app::init_file_source() {
     local -r path="$1"
-    local -r content="$2"
+    local -r content="$(gh api $2 | python3 -m json.tool | grep --invert-match url)"  # Ommiting url lines for simplicity.
     if [ -f "${path}" ]; then
         log:action "warn" "${path} already exists!"
         if app::confirm "Overwrite?"; then
