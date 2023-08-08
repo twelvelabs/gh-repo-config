@@ -146,6 +146,7 @@ app::init() {
     local -r branch="$(git rev-parse --abbrev-ref HEAD)"
     log "Initializing config..."
     app::init_dir "${APP_CONFIG}"
+    echo "*" > "${APP_CONFIG}/.gitignore"
     app::init_file_source "${APP_CONFIG}/repo.json" "/repos/:owner/:repo" "$JSON_REPO_Q"
     app::init_file_source "${APP_CONFIG}/topics.json" "/repos/:owner/:repo/topics" "."
     app::init_dir "${APP_CONFIG}/branch-protection"
