@@ -38,6 +38,6 @@ jobs:
           publish_results: true
 
       - name: Upload results.sarif
-        uses: github/codeql-action/upload-sarif@f3feb00acb00f31a6f60280e6ace9ca31d91c76a # pin@v2
+        uses: github/codeql-action/upload-sarif@04daf014b50eaf774287bf3f0f1869d4b4c4b913 # pin@v2
         with:
           sarif_file: results.sarif
